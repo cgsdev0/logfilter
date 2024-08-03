@@ -428,7 +428,6 @@ func New(mods ...func(*Model)) *Model {
 	m := &Model{
 		scrollPosition:      -1,
 		shouldShowStatusbar: true,
-		shouldHardwrap:      true,
 		input:               &inp,
 	}
 	for _, mod := range mods {
@@ -437,9 +436,9 @@ func New(mods ...func(*Model)) *Model {
 	return m
 }
 
-func WithoutStatusbar(m *Model) { m.shouldShowStatusbar = false }
-func WithStartAtHead(m *Model)  { m.scrollPosition = 0 }
-func WithHardWrap(m *Model)     { m.shouldHardwrap = true }
+func WithoutStatusbar(m *Model)    { m.shouldShowStatusbar = false }
+func WithStartAtHead(m *Model)     { m.scrollPosition = 0 }
+func WithSoftWrap(m *Model) *Model { m.shouldHardwrap = false; return m }
 
 // [Model] implements [tea.Model]
 var _ tea.Model = &Model{}

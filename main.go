@@ -103,7 +103,7 @@ type scroll struct {
 }
 
 func newScroll() *scroll {
-	return &scroll{logview.New()}
+	return &scroll{logview.WithSoftWrap(logview.New())}
 }
 
 var _ tea.Model = &scroll{}
