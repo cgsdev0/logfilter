@@ -8,11 +8,14 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"syscall"
 	"time"
 
 	"github.com/cgsdev0/logfilter/logview"
 	tea "github.com/charmbracelet/bubbletea"
+	"golang.org/x/sys/unix"
 )
 
 type Sink func(string)
@@ -91,6 +94,22 @@ func main() {
 		}
 	}
 
+	os.Stdin.Close()
+	pid := os.Getpid()
+	pgid, err := unix.Getpgid(pid)
+
+	if err != nil {
+		log.Fatalf("could not get process group id for pid: %v\n", pid)
+	}
+
+	processGroup, err := os.FindProcess(pgid)
+
+	if err != nil {
+		log.Fatalf("could not find process for pid: %v\n", pgid)
+	}
+
+	syscall.Kill(-syscall.Getpgrp(), syscall.SIGINT)
+	processGroup.Wait()
 	os.Exit(0)
 }
 
